@@ -1,13 +1,12 @@
 package main
 
-import "net/http"
-
-func helloWorld(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("hello world"))
-}
+import (
+	"bank-app/src/app/controllers/user"
+	"net/http"
+)
 
 func main() {
-	http.Handle("/", helloWorld)
+	http.Handle("/", new(user.UserHandler))
 
 	http.ListenAndServe(":3333", nil)
 }
