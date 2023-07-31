@@ -48,4 +48,24 @@ func New(storagePath string) (*Storage, error) {
 	return &Storage{db}, nil
 }
 
+//func (s *Storage) GetById(id int) (interface{}, error) {
+//
+//}
+//
+//func (s *Storage) GetAll() (interface{}, error) {
+//
+//}
+//
+//func (s *Storage) Insert(data interface{}) error {
+//
+//}
+//
+//func (s *Storage) Update(data interface{}) error {
+//
+//}
+//
+//func (s *Storage) Delete(id int) error {
+//
+//}
+
 //func (storage *Storage) Get
