@@ -23,6 +23,10 @@ type UserRepository struct {
 	db *sql.DB
 }
 
+func NewUserRepository(db *sql.DB) *UserRepository {
+	return &UserRepository{db}
+}
+
 func (s *UserRepository) GetById(id int) (*User, error) {
 	stmt, err := s.db.Prepare(`SELECT * FROM users WHERE id=?`)
 	if err != nil {
@@ -42,7 +46,7 @@ func (s *UserRepository) GetById(id int) (*User, error) {
 	return &user, nil
 }
 
-func (s *UserRepository) Insert(user User) error {
+func (s *UserRepository) Insert(user *User) error {
 	stmt, err := s.db.Prepare("INSERT INTO users(id, name, email, password) VALUES(?, ?, ?, ?)")
 	if err != nil {
 		return err
@@ -58,7 +62,7 @@ func (s *UserRepository) Insert(user User) error {
 	return nil
 }
 
-func (s *UserRepository) Update(user User) error {
+func (s *UserRepository) Update(user *User) error {
 	stmt, err := s.db.Prepare("UPDATE users SET amount=? WHERE id=?")
 	if err != nil {
 		return err

@@ -1,4 +1,4 @@
-package database
+package sqlite3
 
 import (
 	"database/sql"
@@ -8,25 +8,25 @@ import (
 )
 
 type Storage struct {
-	db *sql.DB
+	DB *sql.DB
 }
 
 func New(storagePath string) (*Storage, error) {
 	db, err := sql.Open("sqlite3", storagePath)
 	if err != nil {
-		fmt.Printf("Error of creating DB: %s", err)
+		fmt.Printf("Error of creating DB: %s\n", err)
 		return nil, err
 	}
 
 	_, err = db.Exec(`
-		CREATE TABLE IF NOT EXIST users(
+		CREATE TABLE IF NOT EXISTS users(
 			id INTEGER PRIMARY KEY,
 			name TEXT NOT NULL,
 			email TEXT NOT NULL,
 			password TEXT NOT NULL,
 			amount DECIMAL(10, 2) DEFAULT 0
 		);
-		CREATE TABLE IF NOT EXIST transactions(
+		CREATE TABLE IF NOT EXISTS transactions(
 			id INTEGER PRIMARY KEY,
 			user_id INTEGER NOT NULL,
 			amount DECIMAL(10, 2) NOT NULL,
@@ -34,7 +34,7 @@ func New(storagePath string) (*Storage, error) {
 			transaction_type TEXT NOT NULL,
 			FOREIGN KEY (user_id) REFERENCES users(id)
 		);
-		CREATE TABLE IF NOT EXIST purchases(
+		CREATE TABLE IF NOT EXISTS purchases(
 			id INTEGER PRIMARY KEY,
 			title TEXT NOT NULL,
 			price DECIMAL(10, 2) NOT NULL,
@@ -42,31 +42,9 @@ func New(storagePath string) (*Storage, error) {
 		);
 	`)
 	if err != nil {
-		fmt.Printf("Error of creating tables: %s", err)
+		fmt.Printf("Error of creating tables: %s\n", err)
 		return nil, err
 	}
 
 	return &Storage{db}, nil
 }
-
-//func (s *Storage) GetById(id int) (interface{}, error) {
-//
-//}
-//
-//func (s *Storage) GetAll() (interface{}, error) {
-//
-//}
-//
-//func (s *Storage) Insert(data interface{}) error {
-//
-//}
-//
-//func (s *Storage) Update(data interface{}) error {
-//
-//}
-//
-//func (s *Storage) Delete(id int) error {
-//
-//}
-
-//func (storage *Storage) Get
