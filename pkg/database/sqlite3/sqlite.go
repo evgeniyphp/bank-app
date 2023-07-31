@@ -23,7 +23,8 @@ func New(storagePath string) (*Storage, error) {
 			id INTEGER PRIMARY KEY,
 			name TEXT NOT NULL,
 			email TEXT NOT NULL,
-			password TEXT NOT NULL
+			password TEXT NOT NULL,
+			amount DECIMAL(10, 2) DEFAULT 0
 		);
 		CREATE TABLE IF NOT EXIST transactions(
 			id INTEGER PRIMARY KEY,
