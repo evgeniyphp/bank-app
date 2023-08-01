@@ -89,6 +89,28 @@ func (userHandler *UserHandler) GetUserBalance(w http.ResponseWriter, r *http.Re
 	}
 }
 
-func (userHandler *UserHandler) TpUpBalance(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("User handler"))
+func (userHandler *UserHandler) TopUpBalance(w http.ResponseWriter, r *http.Request) {
+	if r.Method != http.MethodPost {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	var data struct {
+		ID     int     `json:"id"`
+		Amount float64 `json:"amount"`
+	}
+
+	err := json.NewDecoder(r.Body).Decode(&data)
+	if err != nil {
+		http.Error(w, "Bad request", http.StatusBadRequest)
+		return
+	}
+
+	err = userHandler.s.UpdateBalance(data.ID, data.Amount)
+	if err != nil {
+		http.Error(w, "Cannot update balance", http.StatusBadRequest)
+		return
+	}
+
+	w.WriteHeader(http.StatusOK)
 }
