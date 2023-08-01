@@ -6,6 +6,8 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 )
 
 type UserHandler struct {
@@ -40,7 +42,7 @@ func (userHandler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Reques
 		Email:    data.Email,
 		Password: data.Password,
 	}
-	fmt.Println(user)
+
 	err = userHandler.s.CreateUser(user)
 	if err != nil {
 		http.Error(w, "Cannot create user", http.StatusBadRequest)
@@ -51,7 +53,7 @@ func (userHandler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Reques
 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	i, err := w.Write(result)
+	_, err = w.Write(result)
 	if err != nil {
 		http.Error(w, "Error", http.StatusInternalServerError)
 		return
@@ -59,7 +61,32 @@ func (userHandler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Reques
 }
 
 func (userHandler *UserHandler) GetUserBalance(w http.ResponseWriter, r *http.Request) {
-	w.Write([]byte("User handler"))
+	if r.Method != http.MethodGet {
+		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
+		return
+	}
+
+	urlPath := r.URL.Path
+	parts := strings.Split(urlPath, "/")
+	idStr := parts[len(parts)-1]
+
+	id, _ := strconv.Atoi(idStr)
+
+	result, err := userHandler.s.GetUserBalance(id)
+	if err != nil {
+		http.Error(w, "Cannot find user balance", http.StatusBadRequest)
+		return
+	}
+
+	s := fmt.Sprintf("%f", result)
+
+	w.WriteHeader(http.StatusOK)
+	w.Header().Set("Content-Type", "application/json")
+	_, err = w.Write([]byte(s))
+	if err != nil {
+		http.Error(w, "Error", http.StatusInternalServerError)
+		return
+	}
 }
 
 func (userHandler *UserHandler) TpUpBalance(w http.ResponseWriter, r *http.Request) {

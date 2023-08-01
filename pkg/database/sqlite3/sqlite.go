@@ -20,14 +20,14 @@ func New(storagePath string) (*Storage, error) {
 
 	_, err = db.Exec(`
 		CREATE TABLE IF NOT EXISTS users(
-			id INTEGER PRIMARY KEY,
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			name TEXT NOT NULL,
 			email TEXT NOT NULL,
 			password TEXT NOT NULL,
 			amount DECIMAL(10, 2) DEFAULT 0
 		);
 		CREATE TABLE IF NOT EXISTS transactions(
-			id INTEGER PRIMARY KEY,
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			user_id INTEGER NOT NULL,
 			amount DECIMAL(10, 2) NOT NULL,
 			transaction_date TEXT NOT NULL,
@@ -35,7 +35,7 @@ func New(storagePath string) (*Storage, error) {
 			FOREIGN KEY (user_id) REFERENCES users(id)
 		);
 		CREATE TABLE IF NOT EXISTS purchases(
-			id INTEGER PRIMARY KEY,
+		id INTEGER PRIMARY KEY AUTOINCREMENT,
 			title TEXT NOT NULL,
 			price DECIMAL(10, 2) NOT NULL,
 			description TEXT NOT NULL

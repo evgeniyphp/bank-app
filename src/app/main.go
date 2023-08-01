@@ -20,6 +20,7 @@ func main() {
 	userService := services.NewUserService(userRepository)
 	uH := userHandler.NewUserHandler(userService)
 	http.HandleFunc("/users", uH.CreateUser)
+	http.HandleFunc("/users", uH.GetUserBalance)
 	//	http.HandleFunc("/",)
 
 	http.ListenAndServe(":3333", nil)
