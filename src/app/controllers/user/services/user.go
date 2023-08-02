@@ -1,13 +1,17 @@
 package services
 
-import userModel "bank-app/src/app/controllers/user/models"
+import (
+	transactionService "bank-app/src/app/controllers/transcation/services"
+	userModel "bank-app/src/app/controllers/user/models"
+)
 
 type UserService struct {
-	u *userModel.UserRepository
+	u userModel.UserRepositoryI
+	t transactionService.TransactionServiceI
 }
 
-func NewUserService(userReposutory *userModel.UserRepository) *UserService {
-	return &UserService{userReposutory}
+func NewUserService(u userModel.UserRepositoryI, t transactionService.TransactionServiceI) *UserService {
+	return &UserService{u, t}
 }
 
 func (userService *UserService) CreateUser(obj *userModel.User) error {
@@ -33,6 +37,11 @@ func (userService *UserService) UpdateBalance(id int, amount float64) error {
 	}
 	user.Amount = amount
 	err = userService.u.Update(user)
+	if err != nil {
+		return err
+	}
+
+	err = userService.t.CreateTransaction(id, amount, 1)
 	if err != nil {
 		return err
 	}

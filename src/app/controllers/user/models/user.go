@@ -15,8 +15,8 @@ type User struct {
 
 type UserRepositoryI interface {
 	GetById(int) (*User, error)
-	Update(User) error
-	Insert(User) error
+	Update(*User) error
+	Insert(*User) error
 }
 
 type UserRepository struct {
