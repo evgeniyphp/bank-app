@@ -1,4 +1,9 @@
-package purchase_model
+package purchaseModel
+
+import (
+	"database/sql"
+	"fmt"
+)
 
 type Good struct {
 	ID          int
@@ -7,22 +12,41 @@ type Good struct {
 	Description string
 }
 
-func (s *Good) GetById(id int) (interface{}, error) {
-
+type GoodRepositoryI interface {
+	Insert(*Good) error
+	GetById(int) (*Good, error)
 }
 
-func (s *Good) GetAll() (interface{}, error) {
-
+type GoodRepository struct {
+	db *sql.DB
 }
 
-func (s *Good) Insert(data interface{}) error {
+func (s *GoodRepository) GetById(id int) (*Good, error) {
+	stmt, err := s.db.Prepare("SELECT * FROM purchases WHERE id=?")
+	if err != nil {
+		return nil, err
+	}
 
+	var good Good
+
+	err = stmt.QueryRow(id).Scan(&good)
+	if err != nil {
+		return nil, err
+	}
+
+	return &good, nil
 }
 
-func (s *Good) Update(data interface{}) error {
+func (s *GoodRepository) Insert(obj *Good) error {
+	stmt, err := s.db.Prepare("INSERT INTO purchases(title, price, description) VALUES(?,?,?)")
+	if err != nil {
+		return err
+	}
+	r, err := stmt.Exec(obj.Title, obj.Price, obj.Description)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Result insert good: ", r)
 
-}
-
-func (s *Good) Delete(id int) error {
-
+	return nil
 }

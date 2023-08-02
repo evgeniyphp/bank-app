@@ -35,7 +35,7 @@ func New(storagePath string) (*Storage, error) {
 			FOREIGN KEY (user_id) REFERENCES users(id)
 		);
 		CREATE TABLE IF NOT EXISTS purchases(
-		id INTEGER PRIMARY KEY AUTOINCREMENT,
+			id INTEGER PRIMARY KEY AUTOINCREMENT,
 			title TEXT NOT NULL,
 			price DECIMAL(10, 2) NOT NULL,
 			description TEXT NOT NULL
