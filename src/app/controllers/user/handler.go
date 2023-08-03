@@ -44,16 +44,19 @@ func (userHandler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Reques
 	}
 
 	err = userHandler.s.CreateUser(user)
+	// TODO: return user to display
 	if err != nil {
 		http.Error(w, "Cannot create user", http.StatusBadRequest)
 		return
 	}
 
-	result, err := json.Marshal(user)
+	//	result, err := json.Marshal(user)
+
+	result := `{"success": True}`
 
 	w.WriteHeader(http.StatusCreated)
 	w.Header().Set("Content-Type", "application/json")
-	_, err = w.Write(result)
+	_, err = w.Write([]byte(result))
 	if err != nil {
 		http.Error(w, "Error", http.StatusInternalServerError)
 		return

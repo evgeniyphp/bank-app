@@ -15,17 +15,6 @@ import (
 	"os"
 )
 
-func handleEndpoint(handler *userHandler.UserHandler) http.HandlerFunc {
-	return func(w http.ResponseWriter, r *http.Request) {
-		if r.Method == "POST" {
-			handler.CreateUser(w, r)
-		} else if r.Method == "GET" {
-			handler.GetUserBalance(w, r)
-		} else {
-			http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
-		}
-	}
-}
 
 func main() {
 	storage, err := sqlite3.New("./storage")
@@ -45,7 +34,8 @@ func main() {
 
 	mux := http.NewServeMux()
 
-	mux.HandleFunc("/users", handleEndpoint(uH))
+	mux.HandleFunc("/users", uH.CreateUser)
+	mux.HandleFunc("/users/", uH.GetUserBalance)
 	mux.HandleFunc("/update-balance", uH.TopUpBalance)
 	mux.HandleFunc("/buy-good", sH.BuyGood)
 	mux.HandleFunc("/good", sH.CreateGood)

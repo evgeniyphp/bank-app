@@ -33,7 +33,7 @@ func (s *GoodRepository) GetById(id int) (*Good, error) {
 
 	var good Good
 
-	err = stmt.QueryRow(id).Scan(&good)
+	err = stmt.QueryRow(id).Scan(&good.ID, &good.Title, &good.Price, &good.Description)
 	if err != nil {
 		return nil, err
 	}
