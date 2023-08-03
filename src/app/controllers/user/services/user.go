@@ -1,4 +1,4 @@
-package services
+package user_service
 
 import (
 	transactionService "bank-app/src/app/controllers/transcation/services"
@@ -10,7 +10,7 @@ type UserService struct {
 	t transactionService.TransactionServiceI
 }
 
-func NewUserService(u userModel.UserRepositoryI, t transactionService.TransactionServiceI) *UserService {
+func New(u userModel.UserRepositoryI, t transactionService.TransactionServiceI) *UserService {
 	return &UserService{u, t}
 }
 

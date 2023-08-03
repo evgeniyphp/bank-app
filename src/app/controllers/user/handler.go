@@ -2,7 +2,7 @@ package userHandler
 
 import (
 	userModel "bank-app/src/app/controllers/user/models"
-	"bank-app/src/app/controllers/user/services"
+	userService "bank-app/src/app/controllers/user/services"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -11,10 +11,10 @@ import (
 )
 
 type UserHandler struct {
-	s *services.UserService
+	s *userService.UserService
 }
 
-func NewUserHandler(s *services.UserService) *UserHandler {
+func NewUserHandler(s *userService.UserService) *UserHandler {
 	return &UserHandler{s}
 }
 

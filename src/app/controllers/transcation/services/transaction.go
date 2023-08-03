@@ -7,7 +7,11 @@ type TransactionServiceI interface {
 }
 
 type TransactionService struct {
-	r *transactionModel.TransactionI
+	r transactionModel.TransactionI
+}
+
+func New(r transactionModel.TransactionI) *TransactionService {
+	return &TransactionService{r}
 }
 
 func (t *TransactionService) CreateTransaction(userID int, amount float64, transactionType int) error {

@@ -21,6 +21,10 @@ type TransactionRepository struct {
 	db *sql.DB
 }
 
+func New(db *sql.DB) *TransactionRepository {
+	return &TransactionRepository{db}
+}
+
 func (r *TransactionRepository) Insert(t *Transaction) error {
 	stmt, err := r.db.Prepare(`INSERT INTO transactions(user_id, amount, transaction_date, transaction_type) VALUES(?,?,?,?)`)
 	if err != nil {

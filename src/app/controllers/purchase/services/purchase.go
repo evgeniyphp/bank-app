@@ -17,7 +17,7 @@ type PurchaseService struct {
 	t transactionModel.TransactionI
 }
 
-func NewPurhcaseService(r purchaseModel.GoodRepositoryI, u user_model.UserRepositoryI, t transactionModel.TransactionI) *PurchaseService {
+func New(r purchaseModel.GoodRepositoryI, u user_model.UserRepositoryI, t transactionModel.TransactionI) *PurchaseService {
 	return &PurchaseService{r, u, t}
 }
 

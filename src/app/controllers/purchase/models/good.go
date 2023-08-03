@@ -21,6 +21,10 @@ type GoodRepository struct {
 	db *sql.DB
 }
 
+func New(db *sql.DB) *GoodRepository {
+	return &GoodRepository{db}
+}
+
 func (s *GoodRepository) GetById(id int) (*Good, error) {
 	stmt, err := s.db.Prepare("SELECT * FROM purchases WHERE id=?")
 	if err != nil {
