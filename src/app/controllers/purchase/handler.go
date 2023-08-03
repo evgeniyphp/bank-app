@@ -9,7 +9,11 @@ import (
 )
 
 type PurchaseHandler struct {
-	s *purchaseService.PurchaseServiceI
+	s purchaseService.PurchaseServiceI
+}
+
+func New(s purchaseService.PurchaseServiceI) *PurchaseHandler {
+	return &PurchaseHandler{s}
 }
 
 func (p *PurchaseHandler) CreateGood(w http.ResponseWriter, r *http.Request) {
