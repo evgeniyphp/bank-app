@@ -2,19 +2,15 @@ package services
 
 import "bank-app/src/app/controllers/transaction/models"
 
-type TransactionRepositoryI interface {
+type transactionRepositoryI interface {
 	Insert(t *models.Transaction) error
 }
 
-type TransactionServiceI interface {
-	CreateTransaction(userID int, amount float64, transactionType int) error
-}
-
 type TransactionService struct {
-	r TransactionRepositoryI
+	r transactionRepositoryI
 }
 
-func NewTransactionService(r TransactionRepositoryI) *TransactionService {
+func NewTransactionService(r transactionRepositoryI) *TransactionService {
 	return &TransactionService{r}
 }
 

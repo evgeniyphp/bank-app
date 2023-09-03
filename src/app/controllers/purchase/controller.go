@@ -1,18 +1,22 @@
 package purchase
 
 import (
-	purchaseModel "bank-app/src/app/controllers/purchase/models"
-	purchaseService "bank-app/src/app/controllers/purchase/services"
+	"bank-app/src/app/controllers/purchase/models"
 	"encoding/json"
 	"fmt"
 	"net/http"
 )
 
-type Controller struct {
-	s purchaseService.PurchaseServiceI
+type PurchaseServiceI interface {
+	CreateGood(*models.Good) error
+	BuyGood(int, int) error
 }
 
-func NewPurchaseController(s purchaseService.PurchaseServiceI) *Controller {
+type Controller struct {
+	s PurchaseServiceI
+}
+
+func NewPurchaseController(s PurchaseServiceI) *Controller {
 	return &Controller{s}
 }
 
@@ -34,7 +38,7 @@ func (p *Controller) CreateGood(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	good := purchaseModel.Good{
+	good := models.Good{
 		Title:       data.Title,
 		Price:       data.Price,
 		Description: data.Description,

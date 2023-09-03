@@ -10,8 +10,14 @@ import (
 	"strings"
 )
 
+type UserServiceI interface {
+	CreateUser(obj *models.User) error
+	GetUserBalance(id int) (float64, error)
+	UpdateBalance(id int, amount float64) error
+}
+
 type Controller struct {
-	s *services.UserService
+	s UserServiceI
 }
 
 func NewController(s *services.UserService) *Controller {

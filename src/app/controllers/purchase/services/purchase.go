@@ -6,32 +6,27 @@ import (
 	userModel "bank-app/src/app/controllers/user/models"
 )
 
-type GoodRepositoryI interface {
+type goodRepositoryI interface {
 	Insert(*purchaseModel.Good) error
 	GetById(int) (*purchaseModel.Good, error)
 }
 
-type UserRepositoryI interface {
+type userRepositoryI interface {
 	GetById(int) (*userModel.User, error)
 	Update(*userModel.User) error
 }
 
-type TransactionI interface {
+type transactionI interface {
 	Insert(*transactionModel.Transaction) error
 }
 
-type PurchaseServiceI interface {
-	CreateGood(*purchaseModel.Good) error
-	BuyGood(int, int) error
-}
-
 type PurchaseService struct {
-	r GoodRepositoryI
-	u UserRepositoryI
-	t TransactionI
+	r goodRepositoryI
+	u userRepositoryI
+	t transactionI
 }
 
-func NewPurchaseService(r GoodRepositoryI, u UserRepositoryI, t TransactionI) *PurchaseService {
+func NewPurchaseService(r goodRepositoryI, u userRepositoryI, t transactionI) *PurchaseService {
 	return &PurchaseService{r, u, t}
 }
 
