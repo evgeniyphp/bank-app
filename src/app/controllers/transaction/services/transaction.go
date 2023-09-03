@@ -19,7 +19,7 @@ func (t *TransactionService) CreateTransaction(userID int, amount float64, trans
 	transaction := &models.Transaction{
 		UserID:          userID,
 		Amount:          amount,
-		TransactionType: "",
+		TransactionType: "", // need to add enum to determine type of transaction
 		TransactionDate: "",
 	}
 

@@ -38,6 +38,9 @@ func (p *PurchaseService) CreateGood(good *purchaseModel.Good) error {
 	return nil
 }
 
+// The method to buy a good. It takes userID and goodID
+// Return error. Could return custom error NotEnoughBalance
+// in case if user doesn't have enough balance
 func (p *PurchaseService) BuyGood(userID int, goodID int) error {
 	user, err := p.u.GetById(userID)
 	if err != nil {
@@ -63,7 +66,7 @@ func (p *PurchaseService) BuyGood(userID int, goodID int) error {
 		UserID:          userID,
 		Amount:          good.Price,
 		TransactionDate: "",
-		TransactionType: "2",
+		TransactionType: "2", // transaction type. need to add enum
 	}
 	err = p.t.Insert(transaction)
 	if err != nil {

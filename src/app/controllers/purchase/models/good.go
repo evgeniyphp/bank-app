@@ -1,3 +1,5 @@
+// Package models describes the Good model and implements repository for that model
+
 package models
 
 import (
@@ -20,6 +22,8 @@ func NewGoodRepository(db *sql.DB) *GoodRepository {
 	return &GoodRepository{db}
 }
 
+// Gets the good model by id
+// Returns the good model and error
 func (s *GoodRepository) GetById(id int) (*Good, error) {
 	stmt, err := s.db.Prepare("SELECT * FROM purchases WHERE id=?")
 	if err != nil {

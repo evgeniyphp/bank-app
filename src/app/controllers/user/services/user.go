@@ -20,7 +20,6 @@ type UserService struct {
 }
 
 func NewUserService(u userRepositoryI, t transactionServiceI) *UserService {
-
 	return &UserService{u, t}
 }
 
