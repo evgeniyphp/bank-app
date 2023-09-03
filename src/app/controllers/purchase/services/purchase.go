@@ -1,10 +1,24 @@
-package purchaseService
+package services
 
 import (
 	purchaseModel "bank-app/src/app/controllers/purchase/models"
-	transactionModel "bank-app/src/app/controllers/transcation/models"
-	user_model "bank-app/src/app/controllers/user/models"
+	transactionModel "bank-app/src/app/controllers/transaction/models"
+	userModel "bank-app/src/app/controllers/user/models"
 )
+
+type GoodRepositoryI interface {
+	Insert(*purchaseModel.Good) error
+	GetById(int) (*purchaseModel.Good, error)
+}
+
+type UserRepositoryI interface {
+	GetById(int) (*userModel.User, error)
+	Update(*userModel.User) error
+}
+
+type TransactionI interface {
+	Insert(*transactionModel.Transaction) error
+}
 
 type PurchaseServiceI interface {
 	CreateGood(*purchaseModel.Good) error
@@ -12,12 +26,12 @@ type PurchaseServiceI interface {
 }
 
 type PurchaseService struct {
-	r purchaseModel.GoodRepositoryI
-	u user_model.UserRepositoryI
-	t transactionModel.TransactionI
+	r GoodRepositoryI
+	u UserRepositoryI
+	t TransactionI
 }
 
-func New(r purchaseModel.GoodRepositoryI, u user_model.UserRepositoryI, t transactionModel.TransactionI) *PurchaseService {
+func NewPurchaseService(r GoodRepositoryI, u UserRepositoryI, t TransactionI) *PurchaseService {
 	return &PurchaseService{r, u, t}
 }
 

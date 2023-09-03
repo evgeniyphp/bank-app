@@ -2,35 +2,38 @@ package main
 
 import (
 	"bank-app/pkg/database/sqlite3"
-	"bank-app/src/app/controllers/purchase"
+	purchaseController "bank-app/src/app/controllers/purchase"
 	purchaseModel "bank-app/src/app/controllers/purchase/models"
 	purchaseService "bank-app/src/app/controllers/purchase/services"
-	transactionModel "bank-app/src/app/controllers/transcation/models"
-	transactionService "bank-app/src/app/controllers/transcation/services"
-	userHandler "bank-app/src/app/controllers/user"
+	transactionModel "bank-app/src/app/controllers/transaction/models"
+	transactionService "bank-app/src/app/controllers/transaction/services"
+	userController "bank-app/src/app/controllers/user"
 	userModel "bank-app/src/app/controllers/user/models"
 	userService "bank-app/src/app/controllers/user/services"
+
 	"net/http"
 
 	"os"
 )
 
-
 func main() {
 	storage, err := sqlite3.New("./storage")
+
 	if err != nil {
 		os.Exit(1)
 	}
-	userRepository := userModel.New(storage.DB)
-	goodRepository := purchaseModel.New(storage.DB)
-	transactionRepository := transactionModel.New(storage.DB)
 
-	tS := transactionService.New(transactionRepository)
-	uS := userService.New(userRepository, tS)
-	pS := purchaseService.New(goodRepository, userRepository, transactionRepository)
+	userRepository := userModel.NewUserRepository(storage.DB)
+	goodRepository := purchaseModel.NewGoodRepository(storage.DB)
+	transactionRepository := transactionModel.NewTransactionRepository(storage.DB)
 
-	uH := userHandler.NewUserHandler(uS)
-	sH := purchase.New(pS)
+	tS := transactionService.NewTransactionService(transactionRepository)
+	uS := userService.NewUserService(userRepository, tS)
+	pS := purchaseService.NewPurchaseService(goodRepository, userRepository, transactionRepository)
+
+	// handlers
+	uH := userController.NewController(uS)
+	sH := purchaseController.NewPurchaseController(pS)
 
 	mux := http.NewServeMux()
 

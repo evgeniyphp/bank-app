@@ -8,15 +8,15 @@ import (
 	"net/http"
 )
 
-type PurchaseHandler struct {
+type Controller struct {
 	s purchaseService.PurchaseServiceI
 }
 
-func New(s purchaseService.PurchaseServiceI) *PurchaseHandler {
-	return &PurchaseHandler{s}
+func NewPurchaseController(s purchaseService.PurchaseServiceI) *Controller {
+	return &Controller{s}
 }
 
-func (p *PurchaseHandler) CreateGood(w http.ResponseWriter, r *http.Request) {
+func (p *Controller) CreateGood(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -53,7 +53,7 @@ func (p *PurchaseHandler) CreateGood(w http.ResponseWriter, r *http.Request) {
 	w.Write(result)
 }
 
-func (p *PurchaseHandler) BuyGood(w http.ResponseWriter, r *http.Request) {
+func (p *Controller) BuyGood(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return

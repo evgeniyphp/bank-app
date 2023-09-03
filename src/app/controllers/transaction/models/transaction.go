@@ -1,13 +1,9 @@
-package transactionModel
+package models
 
 import (
 	"database/sql"
 	"fmt"
 )
-
-type TransactionI interface {
-	Insert(*Transaction) error
-}
 
 type Transaction struct {
 	ID              int
@@ -21,7 +17,7 @@ type TransactionRepository struct {
 	db *sql.DB
 }
 
-func New(db *sql.DB) *TransactionRepository {
+func NewTransactionRepository(db *sql.DB) *TransactionRepository {
 	return &TransactionRepository{db}
 }
 

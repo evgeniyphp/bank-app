@@ -1,4 +1,4 @@
-package user_model
+package models
 
 import (
 	"database/sql"
@@ -13,17 +13,11 @@ type User struct {
 	Amount   float64
 }
 
-type UserRepositoryI interface {
-	GetById(int) (*User, error)
-	Update(*User) error
-	Insert(*User) error
-}
-
 type UserRepository struct {
 	db *sql.DB
 }
 
-func New(db *sql.DB) *UserRepository {
+func NewUserRepository(db *sql.DB) *UserRepository {
 	return &UserRepository{db}
 }
 

@@ -1,4 +1,4 @@
-package purchaseModel
+package models
 
 import (
 	"database/sql"
@@ -12,16 +12,11 @@ type Good struct {
 	Description string
 }
 
-type GoodRepositoryI interface {
-	Insert(*Good) error
-	GetById(int) (*Good, error)
-}
-
 type GoodRepository struct {
 	db *sql.DB
 }
 
-func New(db *sql.DB) *GoodRepository {
+func NewGoodRepository(db *sql.DB) *GoodRepository {
 	return &GoodRepository{db}
 }
 

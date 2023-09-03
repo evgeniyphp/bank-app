@@ -1,22 +1,26 @@
-package transactionService
+package services
 
-import transactionModel "bank-app/src/app/controllers/transcation/models"
+import "bank-app/src/app/controllers/transaction/models"
+
+type TransactionRepositoryI interface {
+	Insert(t *models.Transaction) error
+}
 
 type TransactionServiceI interface {
 	CreateTransaction(userID int, amount float64, transactionType int) error
 }
 
 type TransactionService struct {
-	r transactionModel.TransactionI
+	r TransactionRepositoryI
 }
 
-func New(r transactionModel.TransactionI) *TransactionService {
+func NewTransactionService(r TransactionRepositoryI) *TransactionService {
 	return &TransactionService{r}
 }
 
 func (t *TransactionService) CreateTransaction(userID int, amount float64, transactionType int) error {
 	_ = transactionType
-	transaction := &transactionModel.Transaction{
+	transaction := &models.Transaction{
 		UserID:          userID,
 		Amount:          amount,
 		TransactionType: "",

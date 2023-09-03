@@ -1,8 +1,8 @@
-package userHandler
+package user
 
 import (
-	userModel "bank-app/src/app/controllers/user/models"
-	userService "bank-app/src/app/controllers/user/services"
+	"bank-app/src/app/controllers/user/models"
+	"bank-app/src/app/controllers/user/services"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -10,15 +10,15 @@ import (
 	"strings"
 )
 
-type UserHandler struct {
-	s *userService.UserService
+type Controller struct {
+	s *services.UserService
 }
 
-func NewUserHandler(s *userService.UserService) *UserHandler {
-	return &UserHandler{s}
+func NewController(s *services.UserService) *Controller {
+	return &Controller{s}
 }
 
-func (userHandler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Request) {
+func (Controller *Controller) CreateUser(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -37,13 +37,13 @@ func (userHandler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Reques
 	}
 	// TODO: validation...
 
-	user := &userModel.User{
+	user := &models.User{
 		Name:     data.Name,
 		Email:    data.Email,
 		Password: data.Password,
 	}
 
-	err = userHandler.s.CreateUser(user)
+	err = Controller.s.CreateUser(user)
 	// TODO: return user to display
 	if err != nil {
 		http.Error(w, "Cannot create user", http.StatusBadRequest)
@@ -63,7 +63,7 @@ func (userHandler *UserHandler) CreateUser(w http.ResponseWriter, r *http.Reques
 	}
 }
 
-func (userHandler *UserHandler) GetUserBalance(w http.ResponseWriter, r *http.Request) {
+func (Controller *Controller) GetUserBalance(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -75,7 +75,7 @@ func (userHandler *UserHandler) GetUserBalance(w http.ResponseWriter, r *http.Re
 
 	id, _ := strconv.Atoi(idStr)
 
-	result, err := userHandler.s.GetUserBalance(id)
+	result, err := Controller.s.GetUserBalance(id)
 	if err != nil {
 		http.Error(w, "Cannot find user balance", http.StatusBadRequest)
 		return
@@ -92,7 +92,7 @@ func (userHandler *UserHandler) GetUserBalance(w http.ResponseWriter, r *http.Re
 	}
 }
 
-func (userHandler *UserHandler) TopUpBalance(w http.ResponseWriter, r *http.Request) {
+func (Controller *Controller) TopUpBalance(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodPost {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
@@ -109,7 +109,7 @@ func (userHandler *UserHandler) TopUpBalance(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	err = userHandler.s.UpdateBalance(data.ID, data.Amount)
+	err = Controller.s.UpdateBalance(data.ID, data.Amount)
 	if err != nil {
 		http.Error(w, "Cannot update balance", http.StatusBadRequest)
 		return
