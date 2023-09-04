@@ -2,25 +2,22 @@ package models
 
 import (
 	"bank-app/pkg/database/sqlite3"
-	"fmt"
 	"testing"
 )
 
 func TestMain(t *testing.M) {
-	fmt.Println("hello world")
-	a := t.Run()
-	fmt.Println("END", a)
+	t.Run()
 }
 
 func TestGetById(t *testing.T) {
 	storage, err := sqlite3.New(":memory:")
-	defer storage.DB.Close()
+	db := storage.DB
+
+	defer db.Close()
 
 	if err != nil {
 		t.Fatal("Cannot create db for tests")
 	}
-
-	db := storage.DB
 
 	_, err = db.Exec(`
 		INSERT INTO users (name, email, password, amount) 

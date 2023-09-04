@@ -2,7 +2,6 @@ package user
 
 import (
 	"bank-app/src/app/controllers/user/models"
-	"bank-app/src/app/controllers/user/services"
 	"encoding/json"
 	"fmt"
 	"net/http"
@@ -20,7 +19,7 @@ type Controller struct {
 	s UserServiceI
 }
 
-func NewController(s *services.UserService) *Controller {
+func NewController(s UserServiceI) *Controller {
 	return &Controller{s}
 }
 
