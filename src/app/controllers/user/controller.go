@@ -7,6 +7,8 @@ import (
 	"net/http"
 	"strconv"
 	"strings"
+
+	"github.com/go-playground/validator/v10"
 )
 
 type UserServiceI interface {
@@ -19,6 +21,12 @@ type Controller struct {
 	s UserServiceI
 }
 
+type userRequestBody struct {
+	Name     string `json:"name" validate:"required"`
+	Email    string `json:"email" validate:"required,email"`
+	Password string `json:"password" validate:"required,min=2"`
+}
+
 func NewController(s UserServiceI) *Controller {
 	return &Controller{s}
 }
@@ -29,18 +37,37 @@ func (Controller *Controller) CreateUser(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	var data struct {
-		Name     string `json:"name"`
-		Email    string `json:"email"`
-		Password string `json:"password"`
-	}
+	var data userRequestBody
 
 	err := json.NewDecoder(r.Body).Decode(&data)
 	if err != nil {
 		http.Error(w, "Bad request", http.StatusBadRequest)
 		return
 	}
-	// TODO: validation...
+
+	validate := validator.New()
+
+	err = validate.Struct(data)
+	if err != nil {
+		fmt.Printf("%T\n", err)
+		fmt.Println(err)
+
+		errors := err.(validator.ValidationErrors)
+		errorMessages := make(map[string]string)
+
+		for _, e := range errors {
+			field := e.Field()
+			tag := e.Tag()
+
+			message := fmt.Sprintf("Field '%s' %s validation failed", field, tag)
+			errorMessages[field] = message
+		}
+
+		w.Header().Set("Content-Type", "application/json")
+		w.WriteHeader(http.StatusBadRequest)
+		json.NewEncoder(w).Encode(errorMessages)
+		return
+	}
 
 	user := &models.User{
 		Name:     data.Name,

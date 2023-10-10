@@ -34,7 +34,7 @@ func TestCreateUser(t *testing.T) {
 	}{
 		{
 			testStatus:       "OK",
-			input:            `{"name":"test", "email":"test@m", "password":"123"}`,
+			input:            `{"name":"test", "email":"test@m.com", "password":"123"}`,
 			expectedResponse: `{"success": True}`,
 			expectedStatus:   201,
 			expectedHeader:   "application/json",
