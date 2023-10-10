@@ -13,11 +13,15 @@ type Transaction struct {
 	TransactionType string
 }
 
-type TransactionRepository struct {
-	db *sql.DB
+type DB interface {
+	Prepare(string) (*sql.Stmt, error)
 }
 
-func NewTransactionRepository(db *sql.DB) *TransactionRepository {
+type TransactionRepository struct {
+	db DB
+}
+
+func NewTransactionRepository(db DB) *TransactionRepository {
 	return &TransactionRepository{db}
 }
 
