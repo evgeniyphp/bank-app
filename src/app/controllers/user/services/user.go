@@ -1,20 +1,29 @@
 package services
 
 import (
-	transactionService "bank-app/src/app/controllers/transcation/services"
-	userModel "bank-app/src/app/controllers/user/models"
+	"bank-app/src/app/controllers/user/models"
 )
 
-type UserService struct {
-	u userModel.UserRepositoryI
-	t transactionService.TransactionServiceI
+type userRepositoryI interface {
+	GetById(int) (*models.User, error)
+	Update(*models.User) error
+	Insert(*models.User) error
 }
 
-func NewUserService(u userModel.UserRepositoryI, t transactionService.TransactionServiceI) *UserService {
+type transactionServiceI interface {
+	CreateTransaction(userID int, amount float64, transactionType int) error
+}
+
+type UserService struct {
+	u userRepositoryI
+	t transactionServiceI
+}
+
+func NewUserService(u userRepositoryI, t transactionServiceI) *UserService {
 	return &UserService{u, t}
 }
 
-func (userService *UserService) CreateUser(obj *userModel.User) error {
+func (userService *UserService) CreateUser(obj *models.User) error {
 	err := userService.u.Insert(obj)
 	if err != nil {
 		return err

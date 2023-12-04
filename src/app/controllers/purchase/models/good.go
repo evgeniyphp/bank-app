@@ -1,4 +1,11 @@
-package purchase_model
+// Package models describes the Good model and implements repository for that model
+
+package models
+
+import (
+	"database/sql"
+	"fmt"
+)
 
 type Good struct {
 	ID          int
@@ -7,22 +14,42 @@ type Good struct {
 	Description string
 }
 
-func (s *Good) GetById(id int) (interface{}, error) {
-
+type GoodRepository struct {
+	db *sql.DB
 }
 
-func (s *Good) GetAll() (interface{}, error) {
-
+func NewGoodRepository(db *sql.DB) *GoodRepository {
+	return &GoodRepository{db}
 }
 
-func (s *Good) Insert(data interface{}) error {
+// Gets the good model by id
+// Returns the good model and error
+func (s *GoodRepository) GetById(id int) (*Good, error) {
+	stmt, err := s.db.Prepare("SELECT * FROM purchases WHERE id=?")
+	if err != nil {
+		return nil, err
+	}
 
+	var good Good
+
+	err = stmt.QueryRow(id).Scan(&good.ID, &good.Title, &good.Price, &good.Description)
+	if err != nil {
+		return nil, err
+	}
+
+	return &good, nil
 }
 
-func (s *Good) Update(data interface{}) error {
+func (s *GoodRepository) Insert(obj *Good) error {
+	stmt, err := s.db.Prepare("INSERT INTO purchases(title, price, description) VALUES(?,?,?)")
+	if err != nil {
+		return err
+	}
+	r, err := stmt.Exec(obj.Title, obj.Price, obj.Description)
+	if err != nil {
+		return err
+	}
+	fmt.Println("Result insert good: ", r)
 
-}
-
-func (s *Good) Delete(id int) error {
-
+	return nil
 }

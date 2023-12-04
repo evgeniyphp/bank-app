@@ -1,4 +1,4 @@
-package user_model
+package models
 
 import (
 	"database/sql"
@@ -13,12 +13,6 @@ type User struct {
 	Amount   float64
 }
 
-type UserRepositoryI interface {
-	GetById(int) (*User, error)
-	Update(*User) error
-	Insert(*User) error
-}
-
 type UserRepository struct {
 	db *sql.DB
 }
@@ -30,16 +24,16 @@ func NewUserRepository(db *sql.DB) *UserRepository {
 func (s *UserRepository) GetById(id int) (*User, error) {
 	stmt, err := s.db.Prepare(`SELECT * FROM users WHERE id=?`)
 	if err != nil {
-		fmt.Printf("Error: %s", err)
+		fmt.Printf("Error: %s\n", err)
 		return nil, err
 	}
 
 	var user User
 
 	row := stmt.QueryRow(id)
-	err = row.Scan(&user)
+	err = row.Scan(&user.ID, &user.Name, &user.Email, &user.Password, &user.Amount)
 	if err != nil {
-		fmt.Printf("Error2: %s", err)
+		fmt.Printf("Error2: %s\n", err)
 		return nil, err
 	}
 
@@ -47,12 +41,12 @@ func (s *UserRepository) GetById(id int) (*User, error) {
 }
 
 func (s *UserRepository) Insert(user *User) error {
-	stmt, err := s.db.Prepare("INSERT INTO users(id, name, email, password) VALUES(?, ?, ?, ?)")
+	stmt, err := s.db.Prepare("INSERT INTO users(name, email, password) VALUES(?, ?, ?)")
 	if err != nil {
 		return err
 	}
 
-	result, err := stmt.Exec(user.ID, user.Name, user.Email, user.Password)
+	result, err := stmt.Exec(user.Name, user.Email, user.Password)
 	if err != nil {
 		fmt.Printf("Error3: %s", err)
 		return err
